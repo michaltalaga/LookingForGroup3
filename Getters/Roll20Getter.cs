@@ -22,7 +22,7 @@ namespace Getters
         }
 
         [FunctionName("Roll20Getter")]
-        public async Task Run([TimerTrigger("0 */4 * * *"
+        public async Task Run([TimerTrigger("%Roll20GetterScheduleExpression%"
 #if DEBUG
             , RunOnStartup = true
 #endif
