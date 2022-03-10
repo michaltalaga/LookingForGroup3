@@ -30,6 +30,7 @@ namespace Getters
             [CosmosDB(databaseName: "lookingforgroup3", collectionName: "Roll20GamePages", ConnectionStringSetting = "CosmosDBConnection")] IAsyncCollector<GameDetailsPage> toDoItemsOut,
             ILogger log)
         {
+            log.LogInformation("Running Getters: " + nameof(Roll20Getter));
             for (var pageNumber = 0; pageNumber < MaxPagesToScrape; pageNumber++)
             {
                 var searchResultPageRawHtml = await FetchSearchResultPage(pageNumber);
