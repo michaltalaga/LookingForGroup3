@@ -41,6 +41,7 @@ namespace Getters
                 {
                     var gameDetailsPage = await FetchGameDetailsPage(gamePageDetailsUrl);
                     await toDoItemsOut.AddAsync(gameDetailsPage);
+                    return;
                 }
             }
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
