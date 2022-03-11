@@ -30,7 +30,7 @@ namespace Getters
             [CosmosDB(databaseName: "lookingforgroup3", containerName: "Roll20GamePages", Connection = "CosmosDBConnection")] IAsyncCollector<GameDetailsPage> gameDetailsPages,
             ILogger log)
         {
-            log.LogInformation("Running Getters: " + nameof(Roll20Getter));
+            log.LogInformation("Running Getter");
             for (var pageNumber = 0; pageNumber < MaxPagesToScrape; pageNumber++)
             {
                 var searchResultPageRawHtml = await FetchSearchResultPage(pageNumber);
@@ -44,7 +44,7 @@ namespace Getters
                     return;
                 }
             }
-            log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
+            log.LogInformation("Finished Getter");
         }
 
         private async Task<GameDetailsPage> FetchGameDetailsPage(string gamePageDetailsUrl)

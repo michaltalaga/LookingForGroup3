@@ -14,7 +14,7 @@ namespace Getters
         {
             foreach (var gameDetailsPage in input)
             {
-                log.LogInformation("Parsing {Id}");
+                log.LogInformation("Parsing {Id}", gameDetailsPage.Id);
             }
         }
     }
