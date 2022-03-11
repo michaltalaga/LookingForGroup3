@@ -27,7 +27,7 @@ namespace Getters
             , RunOnStartup = true
 #endif
             )]TimerInfo myTimer,
-            [CosmosDB(databaseName: "lookingforgroup3", collectionName: "Roll20GamePages", ConnectionStringSetting = "CosmosDBConnection")] IAsyncCollector<GameDetailsPage> toDoItemsOut,
+            [CosmosDB(databaseName: "lookingforgroup3", containerName: "Roll20GamePages", Connection = "CosmosDBConnection")] IAsyncCollector<GameDetailsPage> gameDetailsPages,
             ILogger log)
         {
             log.LogInformation("Running Getters: " + nameof(Roll20Getter));
@@ -40,7 +40,7 @@ namespace Getters
                 foreach (var gamePageDetailsUrl in gamePageDetailsUrls)
                 {
                     var gameDetailsPage = await FetchGameDetailsPage(gamePageDetailsUrl);
-                    await toDoItemsOut.AddAsync(gameDetailsPage);
+                    await gameDetailsPages.AddAsync(gameDetailsPage);
                     return;
                 }
             }
@@ -51,7 +51,7 @@ namespace Getters
         {
             var rawHtml = await httpClient.GetStringAsync(gamePageDetailsUrl);
             var id = gamePageDetailsUrl.Replace("https://app.roll20.net/lfg/listing/", "").Split('/')[0];
-            return new GameDetailsPage { ExternalId = id, Source = gamePageDetailsUrl, RawHtml = rawHtml, Timestamp = DateTimeOffset.UtcNow };
+            return new GameDetailsPage { Id = id, Source = gamePageDetailsUrl, RawHtml = rawHtml, Timestamp = DateTimeOffset.UtcNow };
         }
 
         private IEnumerable<string> GetGamePageDetailsUrls(string searchResultPageRawHtml)
