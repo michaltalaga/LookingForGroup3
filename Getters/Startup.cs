@@ -8,7 +8,7 @@ namespace Getters
         public override void Configure(IFunctionsHostBuilder builder)
         {
             builder.Services.AddHttpClient();
-
+            builder.Services.AddTransient<Roll20.IRoll20GamePageParser, Roll20.Roll20GamePageParser>();
             //builder.Services.AddSingleton<IMyService>((s) => {
             //    return new MyService();
             //});

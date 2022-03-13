@@ -6,19 +6,21 @@ using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Host;
 using Microsoft.Extensions.Logging;
 using System.Linq;
+using Microsoft.Extensions.Configuration;
 
 namespace Getters.Roll20;
 
-public class Roll20Getter
+public class Roll20GetterFunction
 {
     const string Roll20BaseUrl = "https://app.roll20.net";
     const string SearchPageUrlFormatString = Roll20BaseUrl + "/lfg/search/?yesmaturecontent=true&sortby=startingsoon&page=";
-    const int MaxPagesToScrape = 200;
+    readonly int MaxPagesToScrape;
     private HttpClient httpClient;
 
-    public Roll20Getter(IHttpClientFactory httpClientFactory)
+    public Roll20GetterFunction(IHttpClientFactory httpClientFactory, IConfiguration configuration)
     {
         httpClient = httpClientFactory.CreateClient();
+        MaxPagesToScrape = configuration.GetValue("Roll20MaxPagesToScrape", 2);
     }
 
     [FunctionName("Roll20Getter")]
@@ -27,31 +29,33 @@ public class Roll20Getter
         , RunOnStartup = true
 #endif
         )]TimerInfo myTimer,
-        [CosmosDB(databaseName: "lookingforgroup3", containerName: "Roll20GamePages", Connection = "CosmosDBConnection")] IAsyncCollector<GameDetailsPage> gameDetailsPages,
+        [CosmosDB(databaseName: "lookingforgroup3", containerName: "Roll20GamePages", Connection = "CosmosDBConnection")] IAsyncCollector<GameDetailsScrappedPage> gameDetailsPages,
         ILogger log)
     {
-        log.LogInformation("Running Getter");
         for (var pageNumber = 0; pageNumber < MaxPagesToScrape; pageNumber++)
         {
+            log.LogInformation("Scraping page {PageNumber}", pageNumber);
             var searchResultPageRawHtml = await FetchSearchResultPage(pageNumber);
-            if (!HasResults(searchResultPageRawHtml)) break;
-
+            if (!HasResults(searchResultPageRawHtml))
+            {
+                log.LogInformation("No more results");
+            }
             var gamePageDetailsUrls = GetGamePageDetailsUrls(searchResultPageRawHtml);
             foreach (var gamePageDetailsUrl in gamePageDetailsUrls)
             {
+                log.LogInformation("Fetching game details page: {Url}", gamePageDetailsUrl);
                 var gameDetailsPage = await FetchGameDetailsPage(gamePageDetailsUrl);
                 await gameDetailsPages.AddAsync(gameDetailsPage);
-                return;
+                log.LogInformation("Fetched game details page {Url}", gamePageDetailsUrl);
             }
         }
-        log.LogInformation("Finished Getter");
     }
 
-    private async Task<GameDetailsPage> FetchGameDetailsPage(string gamePageDetailsUrl)
+    private async Task<GameDetailsScrappedPage> FetchGameDetailsPage(string gamePageDetailsUrl)
     {
         var rawHtml = await httpClient.GetStringAsync(gamePageDetailsUrl);
         var id = gamePageDetailsUrl.Replace("https://app.roll20.net/lfg/listing/", "").Split('/')[0];
-        return new GameDetailsPage { Id = id, Source = gamePageDetailsUrl, RawHtml = rawHtml, Timestamp = DateTimeOffset.UtcNow };
+        return new GameDetailsScrappedPage { Id = id, Source = gamePageDetailsUrl, RawHtml = rawHtml, Timestamp = DateTimeOffset.UtcNow };
     }
 
     private IEnumerable<string> GetGamePageDetailsUrls(string searchResultPageRawHtml)

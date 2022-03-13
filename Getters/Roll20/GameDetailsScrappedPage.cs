@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Getters
+namespace Getters.Roll20
 {
-    public class GameDetailsPage
+    public class GameDetailsScrappedPage
     {
         [JsonProperty("id")]
         public string Id { get; set; }
