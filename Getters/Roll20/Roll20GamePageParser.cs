@@ -25,7 +25,7 @@ namespace Getters.Roll20
                 Id = gameDetailsPage.Id,
                 Title = getText("//*[@class='campaign_name']"),
                 GameSystem = getTextFromNextCellByLabel("Playing"),
-                NextGameDateTime = DateTimeOffset.FromUnixTimeMilliseconds(long.Parse(getText("//*[@class='nextgame']/*[@class='localtimeme']"))),
+                NextGameDateTime = DateTimeOffset.FromUnixTimeSeconds(long.Parse(getText("//*[@class='nextgame']/*[@class='localtimeme']"))),
                 TotalPlayersNeeded = int.Parse(getTextFromNextCellByLabel("Total Players Needed")),
                 GameType = ParseEnum<GameType>(getTextFromNextCellByLabel("Game Type")),
                 Frequency = ParseEnum<PlayFrequency>(getTextFromNextCellByLabel("Frequency")),

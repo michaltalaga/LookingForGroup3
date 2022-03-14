@@ -18,7 +18,7 @@ public class Roll20ParserTests
         Assert.Equal(gameDetailsPage.Id, game.Id);
         Assert.Equal("The Ring Hunt", game.Title);
         Assert.Equal("D&D 5E", game.GameSystem);
-        Assert.Equal(DateTimeOffset.FromUnixTimeMilliseconds(1648261800), game.NextGameDateTime);
+        Assert.Equal(DateTimeOffset.FromUnixTimeSeconds(1648261800), game.NextGameDateTime);
         Assert.Equal(3, game.TotalPlayersNeeded);
         Assert.Equal(GameType.RolePlayingGame, game.GameType);
         Assert.Equal(PlayFrequency.Weekly, game.Frequency);
@@ -40,7 +40,7 @@ public class Roll20ParserTests
         Assert.Equal(gameDetailsPage.Id, game.Id);
         Assert.Equal("**~.⚡️⚔️⚡️ DM WhoLee's OWC \"The Rock: Grimmwolf Chronicles\" ⚡️⚔️⚡️ OWC ⚡️⚔️⚡️ First Session Free.  ⚡️⚔️⚡️ \"Play anytime, anywhere.\" ⚡️⚔️⚡️.~**", game.Title);
         Assert.Equal("D&D 5E", game.GameSystem);
-        Assert.Equal(DateTimeOffset.FromUnixTimeMilliseconds(1647119400), game.NextGameDateTime);
+        Assert.Equal(DateTimeOffset.FromUnixTimeSeconds(1647119400), game.NextGameDateTime);
         Assert.Equal(700, game.TotalPlayersNeeded);
         Assert.Equal(GameType.RolePlayingGame, game.GameType);
         Assert.Equal(PlayFrequency.Once, game.Frequency);
