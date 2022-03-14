@@ -34,7 +34,8 @@ namespace Getters.Roll20
                 NewPlayersWelcome = getBoolFromNextCellByLabel("New Players are Welcome"),
                 MatureContent = getBoolFromNextCellByLabel("Mature Content(18+)"),
                 PayToPlay = getBoolFromNextCellByLabel("Pay to Play"),
-                PickUpGame = getBoolFromNextCellByLabel("Pick Up Game")
+                PickUpGame = getBoolFromNextCellByLabel("Pick Up Game"),
+                Description = getText("//*[@class='description']")
 
             };
             return game;

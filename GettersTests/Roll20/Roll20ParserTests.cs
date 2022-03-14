@@ -28,6 +28,7 @@ public class Roll20ParserTests
         Assert.False(game.MatureContent);
         Assert.False(game.PayToPlay);
         Assert.False(game.PickUpGame);
+        Assert.Equal("", game.Description);
     }
     [Fact]
     public void NonRecuringVoiceOnly()
@@ -49,5 +50,6 @@ public class Roll20ParserTests
         Assert.True(game.MatureContent);
         Assert.False(game.PayToPlay);
         Assert.True(game.PickUpGame);
+        Assert.Contains("WELCOME TO THE ROCK !", game.Description);
     }
 }
